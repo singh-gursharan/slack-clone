@@ -1,0 +1,53 @@
+{%extends 'bootstrap/base.html'%}
+{% block scripts %}
+    {{ super() }}
+    {{ moment.include_moment() }}
+    {{ moment.lang(g.locale) }}
+{% endblock %}
+
+{% block title %}
+    {% if title %}
+        {{ title }} - Microblog
+    {% else %}
+        Welcome to Microblog
+    {% endif %}
+{%endblock%}
+
+    {%block navbar%}
+        <nav class="navbar navbar-default">Microblog: 
+            {% if current_user.is_anonymous %}
+            <a href = "{{ url_for('auth.login') }}">login</a>
+            {% else %}
+            <a href="{{ url_for('auth.logout') }}">logout</a>
+            {% endif %}
+
+
+            {% if g.search_form %}
+            <form class="navbar-form navbar-left" method="GET"
+                action="{{ url_for('main.search')}}">
+                <div class="form-group">
+                    {{g.search_form.q(size=20, class='form-control',
+                    placeholder=g.search_form.q.label.text)}}
+                </div>
+            </form>
+            <button id="download">Download all posts detail</button><br><br>
+            <div id="progress"></div>
+            {% endif %}
+            
+        </nav>
+    {%endblock%}
+    {% block content %}
+        <div class="container-fluid">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-info" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+    
+            {# application content needs to be provided in the app_content block #}
+            {% block app_content %}{% endblock %}
+        </div>
+    {% endblock %}
+ 

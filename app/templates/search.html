@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>{{'Search Result'}}</h1>
+    {% for post in posts %}
+        <h4>channel: {{post.in_channel.name}}</h4>
+        {% include '_post.html' %}
+    {% endfor %}
+{% endblock %}
+
