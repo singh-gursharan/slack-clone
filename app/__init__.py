@@ -12,8 +12,8 @@ import logging
 from elasticsearch import Elasticsearch
 import os
 
+
 db = SQLAlchemy()
-print(db)
 migrate = Migrate()
 bootstrap = Bootstrap()
 login = LoginManager()
@@ -64,5 +64,6 @@ def create_app(config_class=Config):
         slack_app_instance.logger.info('Microblog startup')
 
     return slack_app_instance
+
 
 from app import models

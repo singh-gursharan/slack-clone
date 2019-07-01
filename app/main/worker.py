@@ -12,9 +12,9 @@ def get_all_post(self, id):
         user = User.query.get(id)
         posts = user.posts.all()
         postsdata = []
-        eachpostdata={}
+        eachpostdata = {}
         length = len(posts)
-        i=0
+        i = 0
 
         for post in posts:
             eachpostdata['timestamp'] = post.timestamp
@@ -22,13 +22,12 @@ def get_all_post(self, id):
             eachpostdata['in_channel'] = post.in_channel.name
             postsdata = postsdata + [eachpostdata]
             self.update_state(state='PROGRESS', meta={'current': i, 'total': length,
-                                'status': post.in_channel.name})
-            i=i+1
+                                                      'status': post.in_channel.name})
+            i = i+1
             time.sleep(0.1)
 
-    f= open("app/postsdata.json", "w+")
+    f = open("app/postsdata.json", "w+")
     json.dump(postsdata, f, indent=4, ensure_ascii=False)
-    # f.write(postsdatastr)
     f.close()
 
     return {'current': 100, 'total': 100, 'status': 'Task completed!',

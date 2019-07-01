@@ -5,13 +5,18 @@ from flask import request
 
 
 class PostForm(FlaskForm):
-    post = TextField('Post a message on channel', validators=[DataRequired(), Length(min=1,max=140)])
+    post = TextField('Post a message on channel', validators=[
+                     DataRequired(), Length(min=1, max=140)])
     submit = SubmitField('submit')
- 
+
+
 class CreateChannelForm(FlaskForm):
-    name = TextField('name', validators=[DataRequired(), Length(min=1,max=140)])
-    purpose = TextField('purpose', validators=[DataRequired(), Length(min=1,max=140)])
+    name = TextField('name', validators=[
+                     DataRequired(), Length(min=1, max=140)])
+    purpose = TextField('purpose', validators=[
+                        DataRequired(), Length(min=1, max=140)])
     submit = SubmitField('submit')
+
 
 class SearchForm(FlaskForm):
     q = StringField('Search', validators=[DataRequired()])

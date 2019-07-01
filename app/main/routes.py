@@ -4,7 +4,7 @@ from flask_login import current_user
 from app.main import bp
 from flask_login import login_required
 from app.main.forms import PostForm, CreateChannelForm, SearchForm
-from app.models import Channel, Post,User
+from app.models import Channel, Post, User
 from app import db
 from dateutil.parser import parse
 from datetime import datetime
@@ -55,6 +55,7 @@ def add_channel():
         return redirect(url_for('main.index'))
     return render_template("channel.html", channel_form=channel_form, title="Add Channel")
 
+
 @bp.route('/sendposts.json')
 @login_required
 def send_latest_posts():
@@ -64,7 +65,7 @@ def send_latest_posts():
     channel = Channel.query.get(channel_id)
     if channel:
         posts = channel.posts.filter(Post.timestamp > strtimestamp).all()
-        if len(posts)>0:
+        if len(posts) > 0:
             list_of_parsed_posts = get_posts_parsed(posts)
             print(list_of_parsed_posts)
             post_response = {
@@ -78,6 +79,7 @@ def send_latest_posts():
             }
         json.dumps(post_response)
         return jsonify(post_response)
+
 
 def get_posts_parsed(posts):
     list_of_parsed_posts = []
@@ -104,6 +106,7 @@ def search():
         return redirect(url_for('main.index'))
     posts, total = Post.search(g.search_form.q.data)
     return render_template('search.html', title='Search', posts=posts)
+
 
 @bp.before_request
 def before_request():
@@ -157,6 +160,7 @@ def taskstatus(task_id):
         }
     return jsonify(response)
 
+
 @bp.route('/downloadpostsfile')
 def sendallposts():
-    return send_from_directory(directory = ".",filename = 'postsdata.json', as_attachment=True)
+    return send_from_directory(directory=".", filename='postsdata.json', as_attachment=True)
