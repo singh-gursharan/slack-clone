@@ -9,13 +9,17 @@
         <h1>Hi, {{ current_user.username }}!</h1>
         <br>
         <hr>
-        <div>
-            <a href="{{url_for('main.add_channel')}}" style="color: brown">Add Channel</button></a>
+        <div style="position: relative">
+            <a href="{{url_for('main.add_channel')}}" style="color: brown; position: absolute; right: 0px;">Add Channel</button></a>
         </div>
-        <ul>
+        <ul style="padding-left: 10px;">
             Channels:
         {% for channel in channels%}
-            <li><a href="{{url_for('main.index_with_channel', channel_id=channel.id)}}">{{channel.name}}</a></li>
+            <li style="
+            display: flex;
+            justify-content: space-between;
+        "><a href="{{url_for('main.index_with_channel', channel_id=channel.id)}}" >{{channel.name}}</a>
+            <a href="{{url_for('main.edit_channel', channel_id=channel.id)}}"">Edit</a></li>
         {% endfor %}
         </ul>
     </div>

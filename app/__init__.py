@@ -40,7 +40,9 @@ def create_app(config_class=Config):
     celery.conf.update(slack_app_instance.config)
     slack_app_instance.elasticsearch = Elasticsearch([slack_app_instance.config['ELASTICSEARCH_URL']]) \
         if slack_app_instance.config['ELASTICSEARCH_URL'] else None
-
+    
+    from app.errors import bp as errors_bp
+    slack_app_instance.register_blueprint(errors_bp)
     from app.auth import bp as auth_bp
     slack_app_instance.register_blueprint(auth_bp)
     from app.main import bp as main_bp

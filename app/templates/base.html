@@ -7,14 +7,14 @@
 
 {% block title %}
     {% if title %}
-        {{ title }} - Microblog
+        {{ title }} - Slack-clone
     {% else %}
-        Welcome to Microblog
+        Welcome to Slack-clone 
     {% endif %}
 {%endblock%}
 
     {%block navbar%}
-        <nav class="navbar navbar-default">Microblog: 
+        <nav class="navbar navbar-default">Slack-clone: 
             {% if current_user.is_anonymous %}
             <a href = "{{ url_for('auth.login') }}">login</a>
             {% else %}
@@ -36,6 +36,7 @@
             
         </nav>
     {%endblock%}
+    
     {% block content %}
         <div class="container-fluid">
             {% with messages = get_flashed_messages() %}

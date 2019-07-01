@@ -1,4 +1,4 @@
-from flask import render_template, redirect, send_file, url_for, jsonify, json, request, g, send_from_directory, current_app
+from flask import render_template, redirect, send_file, url_for, jsonify, json, request, g, send_from_directory, current_app, flash
 from flask_babel import get_locale
 from flask_login import current_user
 from app.main import bp
@@ -54,6 +54,32 @@ def add_channel():
         db.session.commit()
         return redirect(url_for('main.index'))
     return render_template("channel.html", channel_form=channel_form, title="Add Channel")
+
+
+@bp.route('/edit_channel/<channel_id>', methods=['Get', 'POST'])
+@login_required
+def edit_channel(channel_id):
+    channel = Channel.query.get(int(channel_id))
+    if channel is None:
+        return render_template('errors/404.html'), 404
+
+    old_ch_name = channel.name
+    if current_user == channel.creator:
+        edit_channel_form = CreateChannelForm(object=channel)
+        if edit_channel_form.validate_on_submit():
+            channel.name = edit_channel_form.name.data
+            channel.purpose = edit_channel_form.purpose.data
+            db.session.commit()
+            print('channel has been edited')
+            flash(f'channel with name {old_ch_name} has been edited to new name {channel.name} and purpose {channel.purpose}')
+            return redirect(url_for('main.index_with_channel', channel_id = channel_id))
+        edit_channel_form.name.data = channel.name
+        edit_channel_form.purpose.data = channel.purpose
+        return render_template("channel.html", channel_form=edit_channel_form, title=f"Edit Channel: {channel.name}", channel_id=channel_id)
+        flash("you are not autherized to edit this channel")
+    return redirect(url_for('main.index_with_channel', channel_id = channel_id))
+    
+
 
 
 @bp.route('/sendposts.json')

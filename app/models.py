@@ -69,6 +69,9 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
+    def __eq__(self, other):
+        return self.id == other.id
+
 
 class Channel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
