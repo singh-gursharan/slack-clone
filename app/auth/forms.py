@@ -4,14 +4,14 @@ from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Le
 from app.models import User
 
 
-class LoginForms(FlaskForm):
+class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
 
-class RegisterationForm(FlaskForm):
+class RegistrationForm(FlaskForm):
     username = StringField('User name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])

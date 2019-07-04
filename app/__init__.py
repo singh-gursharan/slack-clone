@@ -11,6 +11,7 @@ from logging.handlers import RotatingFileHandler
 import logging
 from elasticsearch import Elasticsearch
 import os
+from dotenv import load_dotenv
 
 
 db = SQLAlchemy()

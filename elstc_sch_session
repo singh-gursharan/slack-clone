@@ -1,0 +1,37 @@
+lucene
+ElasticSearch - provides a json based rest api to refer to lucene 
+full text search 
+techniques--> serial scanning , for large documents --> index and searching
+Inverted-index
+indexing
+stemming
+
+TF - IDF==> term frequency - invertdocument frequency
+
+How it works
+Node 
+Cluster
+exteral http request
+node forwarding transport layer
+
+how the data is organised
+documents
+sharding
+routing of documents
+
+replication
+
+
+
+
+
+
+
+
+
+
+
+
+major advantages of ElasticSearch-->
+Distributed---> parallel processing, fault taulerence
+schemaless

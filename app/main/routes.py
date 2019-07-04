@@ -9,18 +9,18 @@ from app import db
 from dateutil.parser import parse
 from datetime import datetime
 from app import celery
-from app.main.worker import get_all_post
+from app.main.worker import get_all_posts
 
 
 @bp.route('/')
-@bp.route('/index', methods=['GET', 'POST'])
+@bp.route('/channels', methods=['GET', 'POST'])
 @login_required
-def index():
+def channels():
     channels = Channel.query.all()
-    return render_template("index.html", title='Home page', channels=channels)
+    return render_template("channels.html", title='Home page', channels=channels)
 
 
-@bp.route('/index/<channel_id>', methods=['GET', 'POST'])
+@bp.route('/channels/<channel_id>', methods=['GET', 'POST'])
 @login_required
 def index_with_channel(channel_id):
     message_form = PostForm()
@@ -36,11 +36,10 @@ def index_with_channel(channel_id):
             'timestamp': post.timestamp,
             'utctimestr': str(post.timestamp)
         }
-        # return redirect(url_for('main.index_with_channel', channel_id=channel_id))
         json.dumps(post_response)
         return jsonify(post_response)
     channels = Channel.query.all()
-    return render_template("index.html", title='Home page', channels=channels, channel=channel, message_form=message_form)
+    return render_template("channels.html", title='Home page', channels=channels, channel=channel, message_form=message_form)
 
 
 @bp.route('/addChannel', methods=['GET', 'POST'])
@@ -52,8 +51,8 @@ def add_channel():
                           purpose=channel_form.purpose.data, creator=current_user)
         db.session.add(channel)
         db.session.commit()
-        return redirect(url_for('main.index'))
-    return render_template("channel.html", channel_form=channel_form, title="Add Channel")
+        return redirect(url_for('main.channels'))
+    return render_template("add_channel.html", channel_form=channel_form, title="Add Channel")
 
 
 @bp.route('/edit_channel/<channel_id>', methods=['Get', 'POST'])
@@ -75,16 +74,14 @@ def edit_channel(channel_id):
             return redirect(url_for('main.index_with_channel', channel_id = channel_id))
         edit_channel_form.name.data = channel.name
         edit_channel_form.purpose.data = channel.purpose
-        return render_template("channel.html", channel_form=edit_channel_form, title=f"Edit Channel: {channel.name}", channel_id=channel_id)
-        flash("you are not autherized to edit this channel")
+        return render_template("add_channel.html", channel_form=edit_channel_form, title=f"Edit Channel: {channel.name}", channel_id=channel_id)
+    flash("you are not autherized to edit this channel")
     return redirect(url_for('main.index_with_channel', channel_id = channel_id))
     
 
-
-
 @bp.route('/sendposts.json')
 @login_required
-def send_latest_posts():
+def latest_channel_posts():
     strtimestamp = request.args.get('timestamp')
     channel_id = request.args.get('channel_id')
     print("this is channel_id", channel_id)
@@ -118,10 +115,6 @@ def get_posts_parsed(posts):
         post_dict['timestamp'] = post.timestamp
         post_dict['utctimestr'] = str(post.timestamp)
         list_of_parsed_posts = list_of_parsed_posts + [post_dict]
-        # list_of_parsed_posts['username'] = post.author.username
-        # list_of_parsed_posts['img_url'] = post.author.avatar(70)
-        # list_of_parsed_posts['body'] = post.body
-        # list_of_parsed_posts['timestamp'] = post.timestamp
     return list_of_parsed_posts
 
 
@@ -129,7 +122,7 @@ def get_posts_parsed(posts):
 @login_required
 def search():
     if not g.search_form.validate():
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.channels'))
     posts, total = Post.search(g.search_form.q.data)
     return render_template('search.html', title='Search', posts=posts)
 
@@ -148,25 +141,18 @@ def before_request():
 @login_required
 def download():
     print('called')
-    task = get_all_post.delay(current_user.id)
-    return jsonify({}), 202, {'Location': url_for('main.taskstatus',
+    task = get_all_posts.delay(current_user.id)
+    return jsonify({}), 202, {'Location': url_for('main.task_status',
                                                   task_id=task.id)}
     # return send_from_directory(directory = ".",filename = 'postsdata.json', as_attachment=True)
 
 
 @bp.route('/status/<task_id>')
-def taskstatus(task_id):
-    task = get_all_post.AsyncResult(task_id)
-    print(task.info)
-    if task.state == 'PENDING':
-        # job did not start yet
-        response = {
-            'state': task.state,
-            'current': 0,
-            'total': 1,
-            'status': 'Pending...'
-        }
-    elif task.state != 'FAILURE':
+def task_status(task_id):
+    print(task_id)
+    task = get_all_posts.AsyncResult(task_id)
+    print(task.state)
+    if task.state != 'FAILURE':
         response = {
             'state': task.state,
             'current': task.info.get('current', 0),
@@ -178,15 +164,13 @@ def taskstatus(task_id):
 
     else:
         # something went wrong in the background job
-        response = {
-            'state': task.state,
-            'current': 1,
-            'total': 1,
-            'status': str(task.info),  # this is the exception raised
-        }
+        response['status'] = str(task.info)
     return jsonify(response)
 
 
 @bp.route('/downloadpostsfile')
-def sendallposts():
-    return send_from_directory(directory=".", filename='postsdata.json', as_attachment=True)
+@login_required
+def download_user_all_posts():
+    user_id = current_user.id
+    username = current_user.username
+    return send_from_directory(directory=".", filename=f"postsdata_{user_id}.json", as_attachment=True, attachment_filename=username)
