@@ -1,12 +1,15 @@
 #! /bin/bash
+sudo apt update
 sudo apt install redis
+sudo apt install python3
+sudo apt-get install python3-venv
 sudo apt install nginx
 sudo service nginx restart
 python3 -m venv venv
 source venv/bin/activate
-sudo apt install pip3
+sudo apt install pyhton3-pip
 pip3 install flask
-pip3 install -r requirement.txt
+pip3 install -r requirements.txt
 flask db migrate
 pip3 install SQLAlchemy==1.3.5
 flask db init
@@ -63,5 +66,10 @@ Restart=always
 WantedBy=multi-user.target
 EOF'
 sudo systemctl daemon-reload
+echo "starting service slack_guni_test"
 sudo systemctl start slack_guni_test
+echo "started service slack_guni_test"
+echo "starting service slack_celery_test"
 sudo systemctl start slack_celery_test
+echo "started service slack_celery_test"
+echo "successfully install slack_clone application"
