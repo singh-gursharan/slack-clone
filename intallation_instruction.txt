@@ -1,0 +1,6 @@
+PREREQUISITES
+
+1. system should have python 3
+2. provide a file with the name to the project folder which will contain all your environment variable as follows
+    DATABASE_URL
+    ELASTICSEARCH_URL

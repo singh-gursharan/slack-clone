@@ -20,9 +20,17 @@ sharding
 routing of documents
 
 replication
+filtering - normal filtering as we do in any language
 
+so what makes the ElasticSearch special is
+scoring
+stemming
 
+Query Contest 
+    How well does this document match this query clause?(Score)
 
+Filter Context
+    Does this document match this query clause?(true or flalse)
 
 
 

@@ -663,5 +663,10 @@
         "body": "hello",
         "in_channel": "fifth",
         "timestamp": "Thu, 04 Jul 2019 10:32:30 GMT"
+    },
+    {
+        "body": "dfbsjbf",
+        "in_channel": "my second channel",
+        "timestamp": "Thu, 04 Jul 2019 12:42:40 GMT"
     }
 ]

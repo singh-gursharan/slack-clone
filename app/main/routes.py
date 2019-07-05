@@ -171,6 +171,7 @@ def task_status(task_id):
 @bp.route('/downloadpostsfile')
 @login_required
 def download_user_all_posts():
+    print(current_user)
     user_id = current_user.id
     username = current_user.username
     return send_from_directory(directory=".", filename=f"postsdata_{user_id}.json", as_attachment=True, attachment_filename=username)

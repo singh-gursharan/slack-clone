@@ -1,9 +1,11 @@
 #! /bin/bash
 sudo apt install redis
+sudo apt install nginx
 sudo service nginx restart
-pip3 install flask
 python3 -m venv venv
 source venv/bin/activate
+sudo apt install pip3
+pip3 install flask
 pip3 install -r requirement.txt
 flask db migrate
 pip3 install SQLAlchemy==1.3.5
@@ -13,7 +15,6 @@ flask db migrate
 pip3 install psycopg2
 flask db migrate
 flask db upgrade
-sudo apt install nginx
 sudo apt install ufw
 sudo ufw app list
 sudo ufw allow 'Nginx HTTP'
@@ -24,7 +25,6 @@ pip3 install gunicorn
 sudo bash -c 'cat > /etc/nginx/conf.d/virtual.conf <<EOF
 server {
     listen       80;
-    server_name  13.233.128.61;
 
     location / {
         proxy_pass http://127.0.0.1:8000;
