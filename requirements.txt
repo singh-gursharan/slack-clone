@@ -23,7 +23,7 @@ itsdangerous==1.1.0
 Jinja2==2.10.1
 kombu==4.6.3
 lazy-object-proxy==1.4.1
-Mako==1.0.12
+Mako==1.2.2
 MarkupSafe==1.1.1
 mccabe==0.6.1
 pkg-resources==0.0.0
